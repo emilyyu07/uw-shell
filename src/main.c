@@ -27,9 +27,22 @@ ls -la
 5. child runs ls
 6. child exits
 7. parent resumes
+
+fork()
+- creates a new process by duplicating the calling process
+- returns a value in the parent process and a different value in the child process
+- parent process receives the PID of the child process
+- child process receives 0
 */
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <sys/wait.h>
+
+void run_shell();
+
 int main()
 {
     run_shell();
@@ -42,6 +55,13 @@ void run_shell()
     {
         // print initial prompt
         printf("uw-shell> ");
+
+        // dynamic shell update
+        // char cwd[1024];
+        // getcwd(cwd, sizeof(cwd));
+        // printf("%s> ", cwd);
+
+        fflush(stdout); // ensure prompt is printed before waiting for input
 
         // buffer setup for getline
         char *line = NULL;
@@ -73,16 +93,48 @@ void run_shell()
         }
         argv[i] = NULL;
 
-        // fork process creation
-        /*
-        shell
-        -parent
-        -child
+        if (argv[0] == NULL)
+        {
+            // empty input, skip iteration
+            free(line);
+            continue;
+        }
 
-        Parent pid value >0
-        child pid value 0
-        */
+        // built-in commands, executed by the shell itself (not child processes) ------------
+
+        // check if command is exit
+        if (strcmp(argv[0], "exit") == 0)
+        {
+            free(line);
+            exit(argv[1] ? atoi(argv[1]) : 0);
+        }
+
+        // check if command in cd
+        if (strcmp(argv[0], "cd") == 0)
+        {
+            if (argv[1] == NULL)
+            {
+                chdir(getenv("HOME"));
+            }
+            else if (chdir(argv[1]) != 0)
+            {
+                perror("cd");
+            }
+
+            free(line);
+            continue;
+        }
+
+        // fork process creation
         pid_t pid = fork();
+
+        // if process id fails
+        if (pid < 0)
+        {
+            perror("fork failed");
+            free(line);
+            continue;
+        }
 
         // child process executes command
         if (pid == 0)
@@ -91,8 +143,8 @@ void run_shell()
             execvp(argv[0], argv);
 
             // if execvp returns, there was an error
-            perror("execvp");
-            exit(1);
+            perror(argv[0]);
+            _exit(1);
         }
         else
         {
@@ -100,7 +152,7 @@ void run_shell()
             waitpid(pid, NULL, 0);
         }
 
-        // clesan up memory allocated by getline for next iteration
+        // clean up memory allocated by getline for next iteration
         free(line);
     }
 }
