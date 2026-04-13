@@ -1,21 +1,23 @@
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
-#include <sys/wait.h>
 
-char **parse_line(char *line);
+#include "parser.h"
+
+#define MAX_ARGS 64
 
 char **parse_line(char *line)
 {
-    // tokenize input
-    char **argvc = malloc(sizeof(char *) * 64);
+    char **argv = malloc(sizeof(char *) * MAX_ARGS);
+    if (argv == NULL)
+    {
+        return NULL;
+    }
+
     int i = 0;
 
     char *token = strtok(line, " ");
 
-    // token loop to fill argv array with command and arguments
-    while (token != NULL)
+    while (token != NULL && i < MAX_ARGS - 1)
     {
         argv[i++] = token;
         token = strtok(NULL, " ");

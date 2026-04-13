@@ -4,7 +4,10 @@
 #include <unistd.h>
 #include <sys/wait.h>
 
-void run_shell();
+#include "builtins.h"
+#include "executor.h"
+#include "parser.h"
+#include "shell.h"
 
 void run_shell()
 {
@@ -37,42 +40,35 @@ void run_shell()
         // remove new line character from end of line
         line[strcspn(line, "\n")] = 0;
 
-        // tokenize input (insert here)
+        // tokenize input
+        char **argv = parse_line(line);
+        if (argv == NULL)
+        {
+            perror("parse_line");
+            free(line);
+            continue;
+        }
 
         if (argv[0] == NULL)
         {
             // empty input, skip iteration
+            free(argv);
             free(line);
             continue;
         }
 
-        // built-in commands, executed by the shell itself (not child processes) ------------
-
-        // check if command is exit
-        if (strcmp(argv[0], "exit") == 0)
+        // built-in commands, executed by the shell itself (not child processes)
+        if (handle_builtin(argv))
         {
-            free(line);
-            exit(argv[1] ? atoi(argv[1]) : 0);
-        }
-
-        // check if command in cd
-        if (strcmp(argv[0], "cd") == 0)
-        {
-            if (argv[1] == NULL)
-            {
-                chdir(getenv("HOME"));
-            }
-            else if (chdir(argv[1]) != 0)
-            {
-                perror("cd");
-            }
-
+            free(argv);
             free(line);
             continue;
         }
 
-        // ---------------------------------------
+        // execute non-built-in command
+        execute_command(argv);
 
+        free(argv);
         // clean up memory allocated by getline for next iteration
         free(line);
     }

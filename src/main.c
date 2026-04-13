@@ -41,9 +41,9 @@ fork()
 #include <unistd.h>
 #include <sys/wait.h>
 
-void run_shell();
+#include "shell.h"
 
-int main()
+int main(void)
 {
     run_shell();
     return 0;

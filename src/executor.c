@@ -4,7 +4,7 @@
 #include <unistd.h>
 #include <sys/wait.h>
 
-void execute_command(char **argv);
+#include "executor.h"
 
 void execute_command(char **argv)
 {
@@ -15,7 +15,7 @@ void execute_command(char **argv)
     if (pid < 0)
     {
         perror("fork");
-        continue;
+        return;
     }
 
     // child process executes command
