@@ -10,6 +10,7 @@
 #include "executor.h"
 #include "parser.h"
 #include "shell.h"
+#include "command.h"
 
 void run_shell()
 {
@@ -43,34 +44,34 @@ void run_shell()
         line[strcspn(line, "\n")] = 0;
 
         // tokenize input
-        char **argv = parse_line(line);
-        if (argv == NULL)
+        Command *cmd = parse_line(line);
+        if (cmd == NULL)
         {
             perror("parse_line");
             free(line);
             continue;
         }
 
-        if (argv[0] == NULL)
+        if (cmd->argv[0] == NULL)
         {
             // empty input, skip iteration
-            free(argv);
+            free(cmd);
             free(line);
             continue;
         }
 
         // built-in commands, executed by the shell itself (not child processes)
-        if (handle_builtin(argv))
+        if (handle_builtin(cmd->argv))
         {
-            free(argv);
+            free(cmd);
             free(line);
             continue;
         }
 
         // execute non-built-in command
-        execute_command(argv);
+        execute_command(cmd);
 
-        free(argv);
+        free(cmd);
         // clean up memory allocated by getline for next iteration
         free(line);
     }
