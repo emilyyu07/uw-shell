@@ -19,7 +19,7 @@ run_shell() is a REPL loop
 High-level flow:
 ls -la
 1. read line -> "ls -la\n"
-2. strip newline → "ls -la"
+2. strip newline -> "ls -la"
 3. tokenize -> ["ls", "-la", NULL]
 4. fork()
     ├── parent -> wait
@@ -34,6 +34,8 @@ fork()
 - parent process receives the PID of the child process
 - child process receives 0
 */
+
+// Start program execution here, run the shell loop
 
 #include <stdio.h>
 #include <stdlib.h>

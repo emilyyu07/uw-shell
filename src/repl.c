@@ -1,3 +1,5 @@
+// Loop and orchestration of the shell, including prompt display, input reading, and command execution
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
