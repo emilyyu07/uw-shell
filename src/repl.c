@@ -72,6 +72,7 @@ void run_shell()
         execute_command(cmd);
 
         free(cmd);
+        
         // clean up memory allocated by getline for next iteration
         free(line);
     }

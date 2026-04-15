@@ -1,4 +1,7 @@
-// cd, exit, and other built-in commands that are handled directly by the shell without forking a child process
+/*
+cd, exit, and other built-in commands that are handled directly by the shell 
+(run in parent process) without forking a child process
+*/
 
 #include <stdio.h>
 #include <stdlib.h>
