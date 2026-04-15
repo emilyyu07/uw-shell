@@ -1,4 +1,5 @@
 // fork, exec, and wait for command execution
+// interprets command structures and manages process creation and execution flow
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -7,8 +8,9 @@
 #include <sys/wait.h>
 
 #include "executor.h"
+#include "command.h"
 
-void execute_command(char **argv)
+void execute_command(Command *cmd)
 {
     // fork process creation
     pid_t pid = fork();
@@ -24,10 +26,10 @@ void execute_command(char **argv)
     if (pid == 0)
     {
         // replace child process w program, start execution
-        execvp(argv[0], argv);
+        execvp(cmd->argv[0], cmd->argv);
 
         // if execvp returns, there was an error
-        perror(argv[0]);
+        perror(cmd->argv[0]);
         _exit(1);
     }
     else

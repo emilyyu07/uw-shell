@@ -11,12 +11,9 @@ cmd->argv mens (*cmd).argv, which is the argv field of the Command struct pointe
 #include <string.h>
 
 #include "parser.h"
+#include "command.h"
 
 #define MAX_ARGS 64
-
-typedef struct {
-    char **argv;
-} Command;
 
 Command *parse_line(char *line)
 {
