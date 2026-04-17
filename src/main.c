@@ -33,6 +33,18 @@ fork()
 - returns a value in the parent process and a different value in the child process
 - parent process receives the PID of the child process
 - child process receives 0
+
+Standard File Descriptors:
+- stdin (0): standard input, used for reading input
+- stdout (1): standard output, used for writing output
+- stderr (2): standard error, used for writing error messages
+
+Pipes:
+0 - read end, 1 - write end
+cmd1 -> writes -> pipe -> reads -> cmd2
+
+cmd1 | cmd2 | cmd3
+cmd1 ->
 */
 
 // Start program execution here, run the shell loop

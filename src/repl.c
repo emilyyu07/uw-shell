@@ -6,11 +6,12 @@
 #include <unistd.h>
 #include <sys/wait.h>
 
+#include "command.h"
 #include "builtins.h"
 #include "executor.h"
 #include "parser.h"
 #include "shell.h"
-#include "command.h"
+
 
 void run_shell()
 {
@@ -61,7 +62,7 @@ void run_shell()
         }
 
         // built-in commands, executed by the shell itself (not child processes)
-        if (handle_builtin(cmd->argv))
+        if (handle_builtin(cmd))
         {
             free(cmd);
             free(line);
@@ -72,7 +73,7 @@ void run_shell()
         execute_command(cmd);
 
         free(cmd);
-        
+
         // clean up memory allocated by getline for next iteration
         free(line);
     }

@@ -1,6 +1,8 @@
 #ifndef BUILTINS_H
 #define BUILTINS_H
 
-int handle_builtin(char **argv);
+#include "command.h"
+
+int handle_builtin(Command *cmd);
 
 #endif

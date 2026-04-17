@@ -1,6 +1,8 @@
 #ifndef PARSER_H
 #define PARSER_H
 
-char **parse_line(char *line);
+#include "command.h"
+
+Command *parse_line(char *line);
 
 #endif

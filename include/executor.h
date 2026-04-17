@@ -1,6 +1,7 @@
 #ifndef EXECUTOR_H
 #define EXECUTOR_H
 
-void execute_command(char **argv);
+#include "command.h"
+void execute_command(Command *cmd);
 
 #endif
