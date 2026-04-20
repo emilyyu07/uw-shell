@@ -3,5 +3,6 @@
 
 #include "command.h"
 void execute_command(Command *cmd);
+int execute_pipeline(Command *head);
 
 #endif

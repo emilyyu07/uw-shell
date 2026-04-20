@@ -4,5 +4,6 @@
 #include "command.h"
 
 Command *parse_line(char *line);
+void free_command_list(Command *head);
 
 #endif
